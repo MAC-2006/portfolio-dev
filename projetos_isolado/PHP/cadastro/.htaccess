@@ -1,0 +1,11 @@
+# Evita acesso direto a arquivos sensíveis
+<FilesMatch "database.php">
+    Order Deny,Allow
+    Deny from all
+</FilesMatch>
+
+# Habilita URLs amigáveis (caso use Apache com mod_rewrite)
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php?$1 [L,QSA]

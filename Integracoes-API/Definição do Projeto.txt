@@ -1,0 +1,34 @@
+frappe.ui.form.on('Lancamento Financeiro', {
+    setup: function (frm) {
+        // Sobrescreve o Quick Entry da Repetição
+        frappe.recurring_doc.setup_dialog = function (doc) {
+            let dialog = new frappe.ui.Dialog({
+                title: __('Configuração de Repetição'),
+                fields: [
+                    { fieldname: 'frequency', fieldtype: 'Select', label: __('Frequência'), options: ['Diário', 'Semanal', 'Quinzenal', 'Mensal', 'Trimestral', 'Anual'], reqd: 1 },
+                    { fieldname: 'start_date', fieldtype: 'Date', label: __('Data de Início'), reqd: 1 },
+                    { fieldname: 'end_date', fieldtype: 'Date', label: __('Data de Fim'), reqd: 1 },
+                    
+                    // 🆕 Adicionando um novo campo ao Quick Entry
+                    { fieldname: 'custom_field', fieldtype: 'Data', label: __('Minha Data Personalizada') },
+
+                    { fieldname: 'submit', fieldtype: 'Button', label: __('Salvar') }
+                ]
+            });
+
+            dialog.set_primary_action(__('Salvar'), function () {
+                let values = dialog.get_values();
+                if (!values) return;
+                
+                // Salvar os valores no formulário principal
+                frm.set_value('frequency', values.frequency);
+                frm.set_value('start_date', values.start_date);
+                frm.set_value('end_date', values.end_date);
+                frm.set_value('custom_field', values.custom_field); // 🆕 Adicionando novo campo
+                dialog.hide();
+            });
+
+            dialog.show();
+        };
+    }
+});
